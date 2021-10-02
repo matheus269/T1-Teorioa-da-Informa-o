@@ -1,92 +1,104 @@
 package codificacoes;
 
-import codificacoes.Decoder;
-import codificacoes.Encoder;
-
 import java.util.ArrayList;
-import java.util.BitSet; 
+import java.util.List; 
 
 public class UnaryCodification implements Encoder, Decoder {
 
     @Override
-    public byte[] decode(byte[] data) {
-        ArrayList<Byte> decoded = new ArrayList<>();
-        int count = 0;
+    public byte[] decode(byte[] bytes) {
+    	List<Byte> asciiBytes = new ArrayList<>();
+		int bitCount = 0;
 
-        for(int index = 2; index < data.length; index++) {
-            BitSet bits = BitSet.valueOf(new long[] { data[index] });
-            for(int i = 7; i >= 0; i--){
-                if(!bits.get(i)){
-                    count ++;
-                } else {
-                    decoded.add((byte)count);
-                    count = 0;
-                }
-            }
-        }
+		//começa em 2 pra pular os dois bytes do header
+		for (int i = 2; i < bytes.length; i++) {
+			for (int j = 7; j >= 0; j--) {
+				
+				if (getBit(bytes[i], j) == 1) {
+					bitCount++;
+				} else {
+					//se ja é zero é pq veio dois zeros seguidos, ou seja, terminou os codewords
+					if(bitCount == 0)
+						continue;
+					
+					byte newAsciiByte = (byte) bitCount;
+					asciiBytes.add(newAsciiByte);
+					bitCount = 0;
+				}
+			}
 
-        byte[] decodedBytes = new byte[decoded.size()];
-        for (int i = 0; i < decodedBytes.length; i++) {
-            int ascii = decoded.get(i);
-            decodedBytes[i] = (byte)ascii;
-        }
-
-        return decodedBytes;
+		}
+		return listToArray(asciiBytes);
     }
 
     @Override
-    public byte[] encode(byte [] data) {
-        ArrayList<Byte> resultBytes = new ArrayList<>();
-        byte resultByte = 0;
-        int bitPosition = 0;
-        int aux;
+    public byte[] encode(byte [] bytes) {
+    	List<String> codewords = generateCodewords(bytes);
+		List<Byte> bufferBytes = new ArrayList<>();
 
-        addHeaderValues(resultBytes);
+		addHeaderValues(bufferBytes);
 
-        for(byte b : data) {
+		byte b = 0;
+		int bitPosition = 7;
 
-            if(b<0){
-                aux=256+b;
-            } else{
-                aux=b;
-            }
+		for (String code : codewords) {
+			for (int i = 0; i < code.length(); i++) {
+				char c = code.charAt(i);
 
-            for(int i = 0; i < aux; i++) {
-                if (bitPosition >= 8) {
-                    resultBytes.add(resultByte);
-                    resultByte = 0;
-                    bitPosition = 0;
-                }
+				if (c == '1') {
+					b = addBitInBytePosition(b, bitPosition);
+				}
+				bitPosition--;
 
-                bitPosition++;
-            }
+				// completou o byte, adiciona no buffer e cria um novo
+				if (bitPosition == -1) {
+					bufferBytes.add(b);
+					b = 0;
+					bitPosition = 7;
+				}
+			}
+		}
+		if (b != 0)
+			bufferBytes.add(b);
 
-            if (bitPosition >= 8) {
-                resultBytes.add(resultByte);
-                resultByte = 0;
-                bitPosition = 0;
-            }
-
-            int valToShift = 7-bitPosition;
-            resultByte = (byte) (resultByte | (1<<valToShift));
-            bitPosition++;
-        }
-
-        if (bitPosition > 0) {
-            resultBytes.add(resultByte);
-        }
-
-        byte[] result = new byte[resultBytes.size()];
-
-        for (int i = 0; i < result.length; i++) {
-            result[i] = resultBytes.get(i);
-        }
-
-        return result;
+		return listToArray(bufferBytes);
     }
 
-    private void addHeaderValues(ArrayList<Byte> resultBytes){
-        resultBytes.add((byte) 3);
-        resultBytes.add((byte) 0);
-    }
+	private List<String> generateCodewords(byte[] bytes) {
+		List<String> codewords = new ArrayList<>();
+		for (byte b : bytes) {
+			String codeword = createStreamWithOnes(b) + "0";
+			codewords.add(codeword);
+		}
+		return codewords;
+	}
+    
+	private String createStreamWithOnes(int quantityOfOnes) {
+		// howManyZeros 3 -> Return 111
+		// howManyZeros 7 -> Return 1111111
+		return new String(new char[quantityOfOnes]).replace("\0", "1");
+	}
+
+	private byte addBitInBytePosition(byte b, int position) {
+		return (byte) (b | (1 << position));
+	}
+
+	private byte[] listToArray(List<Byte> bytes) {
+		byte[] array = new byte[bytes.size()];
+		for (int i = 0; i < bytes.size(); i++) {
+			array[i] = bytes.get(i);
+		}
+		return array;
+	}
+
+	private void addHeaderValues(List<Byte> bufferBytes) {
+		// 3 é o código do unário
+		bufferBytes.add((byte) 3);
+		// 0 pois não precisa de divisor
+		bufferBytes.add((byte) 0);
+	}
+
+	public byte getBit(byte b, int position) {
+		return (byte) ((b >> position) & 1);
+	}
 }
