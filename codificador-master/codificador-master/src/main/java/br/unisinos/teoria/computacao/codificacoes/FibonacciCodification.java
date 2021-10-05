@@ -1,11 +1,6 @@
-package codificacoes;
-
-import codificacoes.CodingType;
-import codificacoes.Decoder;
-import codificacoes.Encoder;
+package br.unisinos.teoria.computacao.codificacoes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class FibonacciCodification implements Encoder, Decoder {
 

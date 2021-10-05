@@ -1,10 +1,6 @@
-package codificacoes;
-
-import codificacoes.Decoder;
-import codificacoes.Encoder;
+package br.unisinos.teoria.computacao.codificacoes;
 
 import java.util.ArrayList;
-import java.util.BitSet; 
 
 public class EliasGammaCodification implements Encoder, Decoder {
 

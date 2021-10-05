@@ -1,4 +1,4 @@
-package codificacoes;
+package br.unisinos.teoria.computacao.codificacoes;
 
 import java.util.Arrays;
 

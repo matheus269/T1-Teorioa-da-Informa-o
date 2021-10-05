@@ -1,7 +1,7 @@
-package codificacoes;
+package br.unisinos.teoria.computacao.codificacoes;
 
 import java.util.ArrayList;
-import java.util.List; 
+import java.util.List;
 
 public class UnaryCodification implements Encoder, Decoder {
 
