@@ -1,13 +1,47 @@
 package br.unisinos.teoria.computacao.codificacoes;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
 
 public class DeltaCodification implements Encoder, Decoder {
 
     @Override
     public byte[] decode(byte[] data) {
-        //não foi possível finalizar o encode
-        return null;
+        ArrayList<Byte> resultBytes = new ArrayList<>();
+        resultBytes.add(data[3]);
+        int last;
+        byte current = data[3];
+
+        for(int index = 3; index < data.length; index++) {
+            BitSet bitSet = BitSet.valueOf(new byte[]{data[index]});
+            boolean isChange = bitSet.get(0);
+            boolean isBigger = bitSet.get(1);
+
+            String bitComplete = "";
+            for(int j = 2;j < 8;j++){
+                bitComplete+= bitSet.get(j) ? "1" : "0";
+            }
+            int delta = Integer.parseInt(bitComplete,2);
+            if(isChange) {
+                if(isBigger){
+                    current -=  delta;
+                }else{
+                    current +=  delta;
+                }
+            }
+            resultBytes.add(current);
+        }
+        byte[] bytesArray = mapperByteArray(resultBytes);
+        return bytesArray;
+    }
+
+    private byte[] mapperByteArray(ArrayList<Byte> resultBytes) {
+        byte[] bytesArray = new byte[resultBytes.size()];
+        for (int i = 0; i < resultBytes.size(); i++) {
+            bytesArray[i] = resultBytes.get(i);
+        }
+        return bytesArray;
     }
 
     @Override
@@ -41,11 +75,7 @@ public class DeltaCodification implements Encoder, Decoder {
             resultBytes.add((byte) (delta));
         }
 
-        byte[] result = new byte[resultBytes.size()];
-
-        for(int i = 0; i < result.length; i++) {
-            result[i] = resultBytes.get(i);
-        }
+        byte[] result = mapperByteArray(resultBytes);
         return result;
     }
 
