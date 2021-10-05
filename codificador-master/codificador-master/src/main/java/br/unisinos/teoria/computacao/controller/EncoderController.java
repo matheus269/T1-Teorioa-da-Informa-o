@@ -1,54 +1,61 @@
 package br.unisinos.teoria.computacao.controller;
 
-import br.unisinos.teoria.computacao.coders.TipoCodificacao;
-import br.unisinos.teoria.computacao.representation.CodersRequest;
-import br.unisinos.teoria.computacao.representation.CodersResponse;
-import br.unisinos.teoria.computacao.service.EncodeService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
+import br.unisinos.teoria.computacao.coders.TipoCodificacao;
+import br.unisinos.teoria.computacao.service.EncodeService;
 
 @RestController
 public class EncoderController {
 
-    public static final String SUFIX_ARCHIVE_ENCODE = ".cod";
-    public static final String SUFIX_ARCHIVE_DECODE = ".dec";
-    @Autowired
-    EncodeService encodeService;
+	public static final String SUFIX_ARCHIVE_ENCODE = ".cod";
+	public static final String SUFIX_ARCHIVE_DECODE = ".dec";
+	@Autowired
+	EncodeService encodeService;
 
+	@PostMapping(value = "/encoder/{tipoEncode}")
+	public ResponseEntity<String> encode(
+			@PathVariable("tipoEncode") Integer tipoEncode,
+			@RequestHeader("file") String filePath, 
+			@RequestHeader("divisor") Integer divisor) throws IOException {
 
-    @PostMapping(value = "/encoder/{tipoEncode}")
-    public HttpEntity<byte[]> encode(@PathVariable("tipoEncode") Integer tipoEncode, @RequestParam("file") MultipartFile file, @RequestParam("divisor")  Integer divisor) throws IOException {
+		TipoCodificacao tipoCodificacao = TipoCodificacao.parse(tipoEncode);
+		if (TipoCodificacao.G.equals(tipoCodificacao)) {
+			if (divisor == null) {
+				throw new RuntimeException();
+			}
+		}
 
-        TipoCodificacao tipoCodificacao = TipoCodificacao.parse(tipoEncode);
-        if(TipoCodificacao.G.equals(tipoCodificacao)){
-            if(divisor == null){
-                throw new RuntimeException();
-            }
-        }
+		byte[] data =  Files.readAllBytes(Paths.get(filePath));
+		byte[] response = encodeService.encodar(data, divisor, tipoCodificacao);
+		 
+		int extIndex = filePath.lastIndexOf(".");
+		String newPath = (extIndex > -1 ? filePath.substring(0, extIndex) : filePath) + SUFIX_ARCHIVE_ENCODE;
+		Files.write(Paths.get(newPath), response);
+		
+		return ResponseEntity.ok("Arquivo codificado disponível em: " + newPath);
 
-        byte[] data = file.getBytes();
-        byte[] response =  encodeService.encodar(data,divisor,tipoCodificacao);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment;filename=" + file.getOriginalFilename() + SUFIX_ARCHIVE_DECODE);
-        return new HttpEntity<>(response,headers);
+	}
 
-    }
-
-
-    @PostMapping(value = "/decoder")
-    public HttpEntity<byte[]> decode(@RequestParam("file") MultipartFile file) throws IOException {
-                byte[] data = file.getBytes();
-        byte[] response =  encodeService.decode(data);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment;filename=" + file.getOriginalFilename() + SUFIX_ARCHIVE_DECODE);
-        return new HttpEntity<>(response,headers);
-
-    }
+	@PostMapping(value = "/decoder")
+	public ResponseEntity<String> decode(@RequestHeader("file") String filePath) throws IOException {
+		byte[] data = Files.readAllBytes(Paths.get(filePath));
+		byte[] response = encodeService.decode(data);
+		
+		int extIndex = filePath.lastIndexOf(".");
+		String newPath = (extIndex > -1 ? filePath.substring(0, extIndex) : filePath) + SUFIX_ARCHIVE_DECODE;
+		Files.write(Paths.get(newPath), response);
+		return ResponseEntity.ok("Arquivo decodificado disponível em: " + newPath);
+	}
 }
