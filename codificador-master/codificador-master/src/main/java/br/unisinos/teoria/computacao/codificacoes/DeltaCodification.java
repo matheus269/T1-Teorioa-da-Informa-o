@@ -6,7 +6,7 @@ public class DeltaCodification implements Encoder, Decoder {
 
     @Override
     public byte[] decode(byte[] data) {
-        
+        //não foi possível finalizar o encode
         return null;
     }
 
@@ -14,9 +14,32 @@ public class DeltaCodification implements Encoder, Decoder {
     public byte[] encode(byte [] data) {
 
         ArrayList<Byte> resultBytes = new ArrayList<>();
+        byte delta = 0;
+        int largestDelta = 0;
         addHeaderValues(resultBytes);
 
-       
+        ArrayList<Byte> deltas = new ArrayList<>();
+
+        //descobre o delta de cada byte
+        for(int i = 0; i < data.length-1; i++){
+            delta = (byte) (data[i+1] - data[i]);
+            deltas.add(delta);
+
+            if (Math.abs(delta) > Math.abs(largestDelta)) largestDelta = delta;
+
+            if (i == 0) resultBytes.add(data[i]);
+        }
+
+        int byteLength = 0;
+
+        //tentativa de calcular o codeword de cada salto
+        for(int i = 0; i < deltas.size()-1; i++){
+            if (deltas.get(i) != deltas.get(i+1)){
+                byteLength = Integer.toBinaryString(deltas.get(i)).length();
+                delta = (byte) (deltas.get(i) | (1<<byteLength));
+            }
+            resultBytes.add((byte) (delta));
+        }
 
         byte[] result = new byte[resultBytes.size()];
 
@@ -25,6 +48,7 @@ public class DeltaCodification implements Encoder, Decoder {
         }
         return result;
     }
+
 
     private void addHeaderValues(ArrayList<Byte> resultBytes){
         resultBytes.add((byte) 4);
