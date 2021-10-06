@@ -21,6 +21,7 @@ public class EncoderController {
 
 	public static final String SUFIX_ARCHIVE_ENCODE = ".cod";
 	public static final String SUFIX_ARCHIVE_DECODE = ".dec";
+	
 	@Autowired
 	EncodeService encodeService;
 

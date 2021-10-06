@@ -3,7 +3,8 @@ package br.unisinos.teoria.computacao.codificacoes;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-import org.apache.maven.surefire.shade.org.apache.commons.lang3.StringUtils;
+
+import org.apache.commons.lang.StringUtils;
 
 import static br.unisinos.teoria.computacao.binary.BinaryUtil.alterarBinario;
 import static br.unisinos.teoria.computacao.binary.BinaryUtil.toByteArray;
