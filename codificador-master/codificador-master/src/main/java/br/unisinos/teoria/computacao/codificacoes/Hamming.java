@@ -10,6 +10,12 @@ public class Hamming {
 		BitSet codeword = new BitSet();
 		int bitPosition = 0;
 
+		loopEncode(data, resultBytes, codeword, bitPosition);
+
+		return resultBytes;
+	}
+
+	private static void loopEncode(byte[] data, ArrayList<Byte> resultBytes, BitSet codeword, int bitPosition) {
 		// para cada bit, exceto o cabeçalho
 		for (int index = 2; index < data.length; index++) {
 			BitSet bits = BitSet.valueOf(new long[] { data[index] });
@@ -39,8 +45,6 @@ public class Hamming {
 				resultBytes.add(calcHamming(codeword));
 			}
 		}
-
-		return resultBytes;
 	}
 
 	public static ArrayList<Byte> decode(byte[] data) {
@@ -49,6 +53,14 @@ public class Hamming {
 		int bitPosition = 0;
 		BitSet bitsIniciais, bitsFinais, bitsDecoded = BitSet.valueOf(new long[] { 0 });
 
+		loopDecode(data, resultBytes, codeword, bitPosition, bitsDecoded);
+
+		return resultBytes;
+	}
+
+	private static void loopDecode(byte[] data, ArrayList<Byte> resultBytes, BitSet codeword, int bitPosition, BitSet bitsDecoded) {
+		BitSet bitsFinais;
+		BitSet bitsIniciais;
 		// para cada bit, exceto o cabeçalho
 		for (int index = 3; index < data.length; index++) {
 			BitSet bits = BitSet.valueOf(new long[] { data[index] });
@@ -64,7 +76,7 @@ public class Hamming {
 			if (bitPosition == 8) {
 				// salva o resultado no resultBytes, e recomeça
 				if (index % 2 == 1) { // 4 bits iniciais
-					bitsIniciais = checkHamming(codeword);
+					bitsIniciais = verifyHamming(codeword);
 					for (int j = 0; j < 4; j++) {
 						if (bitsIniciais.get(j)) {
 							bitsDecoded.set(j);
@@ -73,7 +85,7 @@ public class Hamming {
 
 					bitsIniciais.clear();
 				} else { // 4 bits finais
-					bitsFinais = checkHamming(codeword);
+					bitsFinais = verifyHamming(codeword);
 					for (int j = 0; j < 4; j++) {
 						if (bitsFinais.get(j)) {
 							bitsDecoded.set(j + 4);
@@ -91,11 +103,9 @@ public class Hamming {
 				codeword.clear();
 			}
 		}
-
-		return resultBytes;
 	}
 
-	private static BitSet checkHamming(BitSet codeword) {
+	private static BitSet verifyHamming(BitSet codeword) {
 		BitSet result = BitSet.valueOf(new long[] { 0 });
 		// calcula o hamming para o codeword, detecta erros
 		for (int i = 0; i < 4; i++) {
@@ -103,14 +113,11 @@ public class Hamming {
 				result.set(i);
 			}
 		}
-
-		// 1st hamming code
+		//1 codigo hamming
 		setHammingCode(result, 0, 2, 1, 4);
-
-		// 2nd hamming code
+		//2 codigo hamming
 		setHammingCode(result, 1, 2, 3, 5);
-
-		// 3rd hamming code
+		//3 codigo hamming
 		setHammingCode(result, 0, 2, 3, 6);
 
 		if (result.get(4) != codeword.get(4) && result.get(5) != codeword.get(5) && result.get(6) != codeword.get(6)) {
@@ -160,7 +167,6 @@ public class Hamming {
 			count++;
 		if (codeword.get(index3))
 			count++;
-
 		if (count % 2 != 0) {
 			codeword.set(indexToSet);
 		}

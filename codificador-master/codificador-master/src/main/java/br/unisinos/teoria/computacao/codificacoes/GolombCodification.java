@@ -22,11 +22,6 @@ public class GolombCodification implements Encoder, Decoder {
     public byte[] encode(byte [] data) {
         ArrayList<Byte> resultBytes = new ArrayList<>();
 
-        int value;
-        int rest;
-        int valToShift;
-        int aux;
-
         addHeaderValues(resultBytes);
 
         interateByteConvert(data, resultBytes);

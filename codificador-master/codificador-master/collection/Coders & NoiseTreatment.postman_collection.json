@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "7fcc682d-7226-454a-85d4-3a21a5af90b2",
+		"name": "Coders & NoiseTreatment",
+		"description": "Api Documentation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "coders",
+			"item": [
+				{
+					"name": "decode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) file",
+								"key": "file",
+								"value": "nulla incididunt nisi"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/coders/decoder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"coders",
+								"decoder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "encode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) divisor",
+								"key": "divisor",
+								"value": "-20737210"
+							},
+							{
+								"description": "(Required) file",
+								"key": "file",
+								"value": "nulla incididunt nisi"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/coders/encoder/:tipoEncode",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"coders",
+								"encoder",
+								":tipoEncode"
+							],
+							"variable": [
+								{
+									"key": "tipoEncode",
+									"value": "-20737210",
+									"description": "(Required) tipoEncode"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "noise-treatment",
+			"item": [
+				{
+					"name": "decode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) file",
+								"key": "file",
+								"value": "nulla incididunt nisi"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/noise-treatment/decoder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"noise-treatment",
+								"decoder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "encode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) file",
+								"key": "file",
+								"value": "nulla incididunt nisi"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/noise-treatment/encoder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"noise-treatment",
+								"encoder"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "//localhost:8080/",
+			"type": "string"
+		}
+	]
+}

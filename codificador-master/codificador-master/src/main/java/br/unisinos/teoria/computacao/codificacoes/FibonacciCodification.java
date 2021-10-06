@@ -7,7 +7,8 @@ import java.util.Collections;
 
 public class FibonacciCodification implements Encoder, Decoder {
 
-    private final int zeroValue = 235;
+    public static final double TOTAL_TAM_BIS = 8.00;
+    private final int VALUE_ZERO = 235;
 
     @Override
     public byte[] decode(byte[] data) {
@@ -18,6 +19,18 @@ public class FibonacciCodification implements Encoder, Decoder {
         int decodeValue = 0;
 
         int bitPosition = 7;
+        loopBodyDecode(data, decoded, currentNumber, nextNumber, decodeValue, bitPosition);
+
+        byte[] decodedBytes = new byte[decoded.size()];
+        for (int i = 0; i < decodedBytes.length; i++) {
+            int ascii = decoded.get(i);
+            decodedBytes[i] = (byte)ascii;
+        }
+
+        return decodedBytes;
+    }
+
+    private void loopBodyDecode(byte[] data, ArrayList<Integer> decoded, int currentNumber, int nextNumber, int decodeValue, int bitPosition) {
         for (int bytePosition = 2; bytePosition < data.length; ) {
             boolean bit = (data[bytePosition] & (1 << bitPosition)) > 0;
             boolean nextBit = !(bitPosition - 1 < 0 && bytePosition + 1 > data.length - 1) && (data[bitPosition - 1 < 0 ? (bytePosition + 1) : bytePosition] & (1 << (bitPosition - 1 < 0 ? 7 : (bitPosition - 1)))) > 0;
@@ -35,7 +48,7 @@ public class FibonacciCodification implements Encoder, Decoder {
             if (bit && nextBit) {
                 currentNumber = 1;
                 nextNumber = 2;
-                if (decodeValue == zeroValue) {
+                if (decodeValue == VALUE_ZERO) {
                     decodeValue = 0;
                 }
 
@@ -50,14 +63,6 @@ public class FibonacciCodification implements Encoder, Decoder {
                 bytePosition++;
             }
         }
-
-        byte[] decodedBytes = new byte[decoded.size()];
-        for (int i = 0; i < decodedBytes.length; i++) {
-            int ascii = decoded.get(i);
-            decodedBytes[i] = (byte)ascii;
-        }
-
-        return decodedBytes;
     }
 
     @Override
@@ -65,9 +70,23 @@ public class FibonacciCodification implements Encoder, Decoder {
         ArrayList<Byte> resultBytes = new ArrayList<>();
         int totalBitsUsed = 0;
 
+        loopBodyEncode(data, resultBytes, totalBitsUsed);
+
+        byte[] result = new byte[resultBytes.size() + 2];
+
+        addHeaderValues(result);
+
+        for (int i = 2; i < result.length; i++) {
+            result[i] = resultBytes.get(i - 2);
+        }
+
+        return result;
+    }
+
+    private void loopBodyEncode(byte[] data, ArrayList<Byte> resultBytes, int totalBitsUsed) {
         for (byte b : data) {
             if (b == 0) {
-                b = (byte)zeroValue;
+                b = (byte) VALUE_ZERO;
             }
 
             int value = Byte.toUnsignedInt(b);
@@ -76,7 +95,7 @@ public class FibonacciCodification implements Encoder, Decoder {
             fibonacciNumbers.sort(Collections.reverseOrder());
             // totalBytes = round up (fibonacciNumbersSize + stop bit / number of bits)
             totalBitsUsed += (fibonacciNumbers.size() + 1);
-            int totalBytes = (int) Math.ceil(totalBitsUsed / 8.00);
+            int totalBytes = (int) Math.ceil(totalBitsUsed / TOTAL_TAM_BIS);
 
             //add empty bytes
             while (resultBytes.size() < totalBytes) {
@@ -117,16 +136,6 @@ public class FibonacciCodification implements Encoder, Decoder {
 
             resultBytes.set(bytePosition, resultByte);
         }
-
-        byte[] result = new byte[resultBytes.size() + 2];
-
-        addHeaderValues(result);
-
-        for (int i = 2; i < result.length; i++) {
-            result[i] = resultBytes.get(i - 2);
-        }
-
-        return result;
     }
 
     public ArrayList<Integer> getFibonacciNumbersByValue(int value) {

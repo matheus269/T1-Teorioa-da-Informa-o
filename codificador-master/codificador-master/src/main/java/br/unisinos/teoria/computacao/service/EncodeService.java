@@ -2,7 +2,6 @@ package br.unisinos.teoria.computacao.service;
 
 import br.unisinos.teoria.computacao.coders.TipoCodificacao;
 import br.unisinos.teoria.computacao.codificacoes.*;
-import br.unisinos.teoria.computacao.representation.CodersResponse;
 import org.springframework.stereotype.Service;
 
 @Service
