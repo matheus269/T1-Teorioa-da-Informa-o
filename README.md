@@ -1,5 +1,6 @@
-TRABALHO GA - TEORIA DA INFORMAÇÃO
-MEMBROS: Kevin Lima, Pedro Henrique Gomes Viegas e Matheus Rocha
+#TRABALHO GA - TEORIA DA INFORMAÇÃO
+
+##MEMBROS: Kevin Lima, Pedro Henrique Gomes Viegas e Matheus Rocha
 
 Como Rodar a aplicação:
 
