@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import br.unisinos.teoria.computacao.codificacoes.Hamming;
 import br.unisinos.teoria.computacao.codificacoes.crc8.CRC8;
-import br.unisinos.teoria.computacao.codificacoes.crc8.InvalidCRC;
+import br.unisinos.teoria.computacao.codificacoes.crc8.InvalidCRCException;
 
 @Service
 public class NoiseTreatmentService {
@@ -30,14 +30,14 @@ public class NoiseTreatmentService {
 		return result;
 	}
 
-	public byte[] checkNoiseTreatment(byte[] data) throws InvalidCRC {
+	public byte[] checkNoiseTreatment(byte[] data) throws InvalidCRCException {
 		ArrayList<Byte> resultBytes = new ArrayList<>();
 		resultBytes.add(data[0]);
 		resultBytes.add(data[1]);
 
 		byte calculatedCrc = CRC8.calc(getDataForCrc(data));
 		if (calculatedCrc != data[2]) {
-			throw new InvalidCRC("O arquivo está corrompido!");
+			throw new InvalidCRCException("O arquivo está corrompido!");
 		}
 
 		ArrayList<Byte> hammingResult = Hamming.decode(data);

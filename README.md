@@ -86,17 +86,22 @@ pois Fibonnaci não consegue empregar corretamente o valor 0.
 Foi empregado nas decodificações/codificações: 
 -
 Delta - foi utilizado apenas operações BitSet
+
 Fibonacci - apenas operações bitwise
+
 Golumb - foi Utilizado BitSet e operações bitwise
+
 Unary - foi Utilizado operações bitwise
+
 Elias Gamma - foi Utilizado operações bitwise e BitSet
 
+##Referencias
 
-###Bitwise Java - https://www.geeksforgeeks.org/bitwise-operators-in-java/
-###Logbase 2 java - https://www.techiedelight.com/calculate-log-base-2-in-java/
-###BitSet To Array byte - https://www.javatpoint.com/post/java-bitset-tobytearray-method
-###BitWise operator - https://www.javatpoint.com/bitwise-operator-in-java
-###BitWise Docs -https://docs.oracle.com/javase/7/docs/api/java/util/BitSet.html
+####Bitwise Java - https://www.geeksforgeeks.org/bitwise-operators-in-java/
+####Logbase 2 java - https://www.techiedelight.com/calculate-log-base-2-in-java/
+####BitSet To Array byte - https://www.javatpoint.com/post/java-bitset-tobytearray-method
+####BitWise operator - https://www.javatpoint.com/bitwise-operator-in-java
+####BitWise Docs -https://docs.oracle.com/javase/7/docs/api/java/util/BitSet.html
 
 #Implementação do T2 
 
@@ -104,8 +109,6 @@ Elias Gamma - foi Utilizado operações bitwise e BitSet
 
 Informações sobre a implementação
 -
-
-
 
 ## CRC 8
   

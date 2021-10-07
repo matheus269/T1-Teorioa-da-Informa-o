@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.unisinos.teoria.computacao.codificacoes.crc8.InvalidCRC;
+import br.unisinos.teoria.computacao.codificacoes.crc8.InvalidCRCException;
 import br.unisinos.teoria.computacao.service.NoiseTreatmentService;
 
 @RestController
@@ -45,7 +45,7 @@ public class NoiseTreatmentController {
 	}
 
 	@PostMapping(value = "/decoder")
-	public ResponseEntity<String> decode(@RequestHeader("file") String filePath) throws InvalidCRC {
+	public ResponseEntity<String> decode(@RequestHeader("file") String filePath) throws InvalidCRCException {
 		try {
 			byte[] data = Files.readAllBytes(Paths.get(filePath));
 			byte[] result = service.checkNoiseTreatment(data);
@@ -56,7 +56,7 @@ public class NoiseTreatmentController {
 			
 			return ResponseEntity.ok("Arquivo decodificado disponível em: " + newPath);
 			
-		} catch (InvalidCRC e) {
+		} catch (InvalidCRCException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		} catch (IOException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Caminho do arquivo inválido");
