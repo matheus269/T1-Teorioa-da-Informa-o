@@ -1,6 +1,6 @@
-#TRABALHO GA - TEORIA DA INFORMAÇÃO
+# TRABALHO GA - TEORIA DA INFORMAÇÃO
 
-##MEMBROS: Kevin Lima, Pedro Henrique Gomes Viegas e Matheus Rocha
+## MEMBROS: Kevin Lima, Pedro Henrique Gomes Viegas e Matheus Rocha
 
 Como Rodar a aplicação:
 
@@ -21,7 +21,7 @@ em **collection/Coders & NoiseTreatment.postman_collection.json**
 
 ou acessar a url: http://localhost:8080/swagger-ui.html#/
 
-##Coders
+## Coders
 
 Para os acessos do Coders: Golomb, Elias-Gamma, Fibonacci, Unária e Delta
 
@@ -52,7 +52,7 @@ Via header
 file -> onde é o path absoluto do arquivo a ser decodado
 
 
-##Tratamento de Ruido
+## Tratamento de Ruido
 
 Encoder: 
 -
@@ -71,9 +71,9 @@ Via header
 file -> onde é o path absoluto do arquivo a ser decodado
 
 
-#Informações da implentação
+# Informações da implentação
 
-####T1 - Codificações Golomb, Elias-Gamma, Fibonacci, Unária e Delta
+#### T1 - Codificações Golomb, Elias-Gamma, Fibonacci, Unária e Delta
 
 
 Foi feita a sepação de coders eles irão ter sempre a implementação de um encoder e um decoder.
@@ -96,17 +96,17 @@ Unary - foi Utilizado operações bitwise
 
 Elias Gamma - foi Utilizado operações bitwise e BitSet
 
-##Referencias
+## Referencias
 
-####Bitwise Java - https://www.geeksforgeeks.org/bitwise-operators-in-java/
-####Logbase 2 java - https://www.techiedelight.com/calculate-log-base-2-in-java/
-####BitSet To Array byte - https://www.javatpoint.com/post/java-bitset-tobytearray-method
-####BitWise operator - https://www.javatpoint.com/bitwise-operator-in-java
-####BitWise Docs -https://docs.oracle.com/javase/7/docs/api/java/util/BitSet.html
+#### Bitwise Java - https://www.geeksforgeeks.org/bitwise-operators-in-java/
+#### Logbase 2 java - https://www.techiedelight.com/calculate-log-base-2-in-java/
+#### BitSet To Array byte - https://www.javatpoint.com/post/java-bitset-tobytearray-method
+#### BitWise operator - https://www.javatpoint.com/bitwise-operator-in-java
+#### BitWise Docs -https://docs.oracle.com/javase/7/docs/api/java/util/BitSet.html
 
-#Implementação do T2 
+# Implementação do T2 
 
-##Tratamento de Ruídos - Hamming
+## Tratamento de Ruídos - Hamming
 
 Informações sobre a implementação
 -
