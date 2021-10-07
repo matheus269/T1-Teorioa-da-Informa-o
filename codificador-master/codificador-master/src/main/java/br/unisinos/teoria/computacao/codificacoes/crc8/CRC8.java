@@ -88,7 +88,7 @@ public final class CRC8 {
 
 	/**
 	 * Calculate the CRC value with data from a byte array.
-	 *
+	 * Change for the context of aplication remove length
 	 * @param data The byte array
 	 * @return The calculated CRC value
 	 */
